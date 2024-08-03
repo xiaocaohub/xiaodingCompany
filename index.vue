@@ -1,6 +1,5 @@
 <template>
   <div class="container" id="hhhh">
-     
     <el-form
       ref="ruleForm"  
       class="form-search"
@@ -397,8 +396,6 @@
                     label="商品编码"
                     width="229">
                       <template slot-scope="scope">
-
-
                           <el-input type="text" v-model="scope.row.code" style="width:200px;" @blur="updateKindTableDataAll(scope.row)"></el-input>
                       </template>
                   </el-table-column>
@@ -410,6 +407,7 @@
                           <el-input type="text" v-model="scope.row.type" style="width:129px;" @blur="updateKindTableDataAll(scope.row)"></el-input>
                       </template>
                   </el-table-column>
+
                   <!-- <el-table-column
                     prop="amount1"
                     label="上样采购价"
@@ -418,15 +416,37 @@
                           <el-input type="text" v-model="scope.row.SamplePurchasePrice"  style="width:85px;"></el-input>
                       </template>
                   </el-table-column> -->
+                  
+                  <el-table-column
+                    prop="amount1"
+                    
+                    label="供货价"
+                    width="95">
+                      <template slot-scope="scope">
+                          <el-input type="text" v-model="scope.row.yj"  style="width:73px;" @blur="updateKindTableDataAll(scope.row)"></el-input>
+                      </template>
+                  </el-table-column>
+
                   <el-table-column
                     prop="amount1"
                     label="采购价"
-                    width="150">
+                    width="95">
                       <template slot-scope="scope">
-                          <el-input type="text" v-model="scope.row.purchasePrice"  style="width:129px;"  @blur="updateKindTableDataAll(scope.row)"></el-input>
+                          <el-input type="text" v-model="scope.row.purchasePrice"  style="width:73px;"  @blur="updateKindTableDataAll(scope.row)"></el-input>
                       </template>
                   </el-table-column>
                  
+
+                  <el-table-column
+                    prop="amount1"
+                    label="售价"
+                    width="95">
+
+                      <template slot-scope="scope">
+                          <el-input type="text" v-model="scope.row.sj"  style="width:73px;" @blur="updateKindTableDataAll(scope.row)"></el-input>
+                      </template>
+                  </el-table-column>
+
                   <el-table-column
                     prop="amount1"
 
@@ -468,10 +488,10 @@
                   <el-table-column  
                     props = "amount1"
                     label="发货天数"
-                    width="200"
+                    width="135"
                      >
                       <template slot-scope="scope"  >
-                          <el-select v-model="scope.row.dayCount" placeholder="请选择"  style="width:150px;" @change="changeValueFn">                            
+                          <el-select v-model="scope.row.dayCount" placeholder="请选择"  style="width:125px;" @change="changeValueFn">                            
                               <el-option   
                                 v-for="item in scope.row.dayArr"
                                 :key="item.value"
@@ -486,7 +506,7 @@
                   <el-table-column
                     prop="amount1"
                     label="整装or组装"
-                    width="100">
+                   >
                       <template slot-scope="scope">
                         <el-radio-group v-model="scope.row.assemble" style="margin-top:20px;">
                             <el-radio :label="assembleItem.label" v-for="(assembleItem,index) in scope.row.assembleArr" class="assemble_group" @change="changeValueFn">{{  assembleItem.title }}</el-radio>
@@ -496,11 +516,28 @@
                   
                   <el-table-column
                     prop="amount1"
-                    label="图片上传">
+                    label="图片上传"
+                    width="135">
                     <template slot-scope="scope">
-                       <el-button @click="tableUpload(scope)">选择图片</el-button>
+
+                       <el-button size="mini" @click="tableUpload(scope)">选择图片</el-button>
                     </template>
                   </el-table-column>
+
+                  <el-table-column
+                    prop="amount1"
+                    label="上下架"
+                    >
+                      <template slot-scope="scope">
+                          <el-switch
+                            v-model="scope.row.statusFlag"
+                            active-color="#13ce66"
+                            inactive-color="#ff4949"
+                            @change="switchChangeFn(scope.row)">
+                          </el-switch>
+                      </template>
+                  </el-table-column>
+
                 </el-table>
             </div>
           </el-form-item>
@@ -601,13 +638,14 @@
                   </div>
                 </template>
               </el-table-column>
-              <!-- <el-table-column
+              <el-table-column
                 prop="unit"
                 :label="$t('releasephysical.dw')"
                 align="center"
               >
-              </el-table-column> -->
-              <!-- <el-table-column
+              </el-table-column> 
+            
+              <el-table-column
                 :label="$t('releasephysical.txm')"
                 align="center"
                 width="200"
@@ -625,7 +663,8 @@
                     >
                   </div>
                 </template>
-              </el-table-column> -->
+              </el-table-column>
+
               <el-table-column
                 fixed="right"
                 :label="$t('releasephysical.sctp')"
@@ -756,6 +795,17 @@
                 ></vue-editor>
               </el-form-item>
             </div>
+          </el-form-item>
+
+          <el-divider content-position="left">一般属性</el-divider>
+
+          <el-form-item
+            class="goods-img"
+            :label="item.label"
+            v-for="(item,index) in GeneralProperties"
+            v-key="item.id"
+          >
+               <el-input   placeholder="请输入内容" v-model="item.value"></el-input>
           </el-form-item>
         </div>
       </div>
@@ -919,7 +969,7 @@ import {
 } from '@/api/goods/freightManagement'
 import { addClass } from '@/api/goods/goodsClass'
 import { addBrand, getClassInfo, getCountry } from '@/api/goods/brandManagement'
-import { dictionaryList, getKindData, getBrandData, getKindList, editGetKindData, uploadGetId } from '@/api/Platform/numerical'
+import { dictionaryList, getKindData, getBrandData, getKindList, editGetKindData, uploadGetId, getAttr, offShell } from '@/api/Platform/numerical'
 import Config from '@/packages/apis/Config'
 import { getStorage } from '@/utils/storage'
 import axios from 'axios'
@@ -943,9 +993,196 @@ export default {
     //   }
     // };
     return {
+
+        // 一般属性
+        GeneralProperties: [
+       
+            {
+                id: 1,  
+                label: "软硬度",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 2,
+                label: "功能",
+                categories: " ",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 3,
+                label: "产品规格",
+                categories: " ",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 4,
+                label: "单人位",
+                categories: " ",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 5,
+                label: "双人位",
+                categories: " ",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 6,
+                label: "三人位",
+                categories: " ",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 7,
+                label: "四人位",
+                categories: " ",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 8,
+                label: "五人位",
+                categories: " ",
+                type: 1,
+                value: ""
+
+            },
+            {
+                id: 9,
+                label: "贵妃位",
+                categories: " ",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 10,
+                label: "脚踏",
+                categories: " ",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 11,
+                label: "坐高",
+                categories: " ",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 12,
+                label: "坐深",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 13,
+                label: "沙发脚高",
+                categories: " ",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 14,
+                label: "进门尺寸",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 15,
+                label: "材质",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 16,
+                label: "面料",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 17,
+                label: "人体接触面",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: "18",
+                label: "人体非接触面",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 19,
+                label: "框架",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: "20",
+                label: "填充物",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 21,
+                label: "沙发脚",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: 22,
+                label: "抱枕是否随机",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: "23",
+                label: "抱枕数量",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: "24",
+                label: "沙发可否拆洗",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: "25",
+                label: "保养说明",
+                categories: "",
+                type: 1,
+                value: ""
+            },
+            {
+                id: "26",
+                label: "温馨提示",
+                categories: "",
+                type: 1,
+                value: ""
+            }
+        ],
         pageType: "", // editor | 发布 
         // kindValue: "",
-
         dialogImageUrl: '',
         dialogVisibleUploadImage: false,
         disabled: false,
@@ -1071,156 +1308,156 @@ export default {
                  message: this.$t('releasephysical.qsrbqmc'),
                  trigger: 'blur'
             }
-        ]
-      },
-      IntroList: [],
-      ruleForm: {
-          // 商品 id
-          pId: "",
-          // 商品名称
-          goodsTitle: '',
+          ]
+        },
+        IntroList: [],
+        ruleForm: {
+            // 商品 id
+            pId: "",
+            // 商品名称
+            goodsTitle: '',
 
-          // 商品卖点
-          subtitle: '',
-          // 关键词
-          keywords: '',
-          // 商品分类
-          kindValue: "",
-          // 商品分类 cidStr
-          goodKindCidStr: '',
-          goodsClass: '',
-          weight: '',
-          // 商品品牌
-          goodsBrand: '',
-          // 商品封面图
-          goodsCover: '',
-          // 实拍图
-          takePictures: "",
-          // 商品展示图
-          goodsShow: '',
-          //风格
-          styleId:'',
-          styleName:'',
-          // 属性设置
-          // 采购价    
-          cbj: '',
-          bom_nums: "", // 包件数
-          yj: '',
-          sj: '',
-          unit: '',
-          kucun: '1000',
-          attr: '',
-          // 商品属性图
-          attrImg: '',
-          capacity:'',
-          productCode:'',
-          marque:'',
-          // 商品设置
-          inventoryWarning: 2,
-          freight: '',
-          checkedLabel: [],
-          // distributionMode: [],
-          checkedActivity: 1,
-          checked: '',
-          virtualSales: '',
-          mch_sort: '',
-          // 详细内容
-          content: ''
-      },
-      rules: {
-        // 基本信息
-        goodsTitle: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qsrspbt'),
-            trigger: 'blur'
-          }
-        ],
-        // subtitle: [
-        //   {
-        //     required: true,
-        //     message: this.$t('releasephysical.qsrfbt'),
-        //     trigger: 'blur'
-        //   }
-        // ],
-        keywords: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qsrspgjc'),
-            trigger: 'blur'
-          }
-        ],
-        goodsClass: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qsrspfl'),
-            trigger: 'blur'
-          }
-        ],
-        goodsBrand: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qxzsppp'),
-            trigger: 'blur'
-          }
-        ],
-        goodsCover: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qscfmt'),
-            trigger: 'change'
-          }
-        ],
-        goodsShow: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qsczst'),
-            trigger: 'change'
-          }
-        ],
-        weight: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qsrzl'),
-            trigger: 'blur'
-          }
-        ],
-        // 商品属性
-        cbj: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qsrmrcbj'),
-            trigger: 'blur'
-          }
-        ],
-        yj: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qsrmryj'),
-            trigger: 'blur'
-          }
-        ],
-        sj: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qsrmrsj'),
-            trigger: 'blur'
-          }
-        ],
-        unit: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qxzdw'),
-            trigger: 'change'
-          }
-        ],
-        kucun: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qszmrkc'),
-            trigger: 'blur'
-          }
-        ],
+            // 商品卖点
+            subtitle: '',
+            // 关键词
+            keywords: '',
+            // 商品分类
+            kindValue: "",
+            // 商品分类 cidStr
+            goodKindCidStr: '',
+            goodsClass: '',
+            weight: '',
+            // 商品品牌
+            goodsBrand: '',
+            // 商品封面图
+            goodsCover: '',
+            // 实拍图
+            takePictures: "",
+            // 商品展示图
+            goodsShow: '',
+            //风格
+            styleId:'',
+            styleName:'',
+            // 属性设置
+            // 采购价    
+            cbj: '',
+            bom_nums: "", // 包件数
+            yj: '',
+            sj: '',
+            unit: '',
+            kucun: '1000',
+            attr: '',
+            // 商品属性图
+            attrImg: '',
+            capacity:'',
+            productCode:'',
+            marque:'',
+            // 商品设置
+            inventoryWarning: 2,
+            freight: '',
+            checkedLabel: [],
+            // distributionMode: [],
+            checkedActivity: 1,
+            checked: '',
+            virtualSales: '',
+            mch_sort: '',
+            // 详细内容
+            content: ''
+        },
+        rules: {
+          // 基本信息
+          goodsTitle: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qsrspbt'),
+              trigger: 'blur'
+            }
+          ],
+          // subtitle: [
+          //   {
+          //     required: true,
+          //     message: this.$t('releasephysical.qsrfbt'),
+          //     trigger: 'blur'
+          //   }
+          // ],
+          keywords: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qsrspgjc'),
+              trigger: 'blur'
+            }
+          ],
+          goodsClass: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qsrspfl'),
+              trigger: 'blur'
+            }
+          ],
+          goodsBrand: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qxzsppp'),
+              trigger: 'blur'
+            }
+          ],
+          goodsCover: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qscfmt'),
+              trigger: 'change'
+            }
+          ],
+          goodsShow: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qsczst'),
+              trigger: 'change'
+            }
+          ],
+          weight: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qsrzl'),
+              trigger: 'blur'
+            }
+          ],
+          // 商品属性
+          cbj: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qsrmrcbj'),
+              trigger: 'blur'
+            }
+          ],
+          yj: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qsrmryj'),
+              trigger: 'blur'
+            }
+          ],
+          sj: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qsrmrsj'),
+              trigger: 'blur'
+            }
+          ],
+          unit: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qxzdw'),
+              trigger: 'change'
+            }
+          ],
+          kucun: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qszmrkc'),
+              trigger: 'blur'
+            }
+          ],
         // attr: [
         //   {
         //     required: true,
@@ -1228,47 +1465,47 @@ export default {
         //     trigger: 'change'
         //   }
         // ],
-        attrImg: [
-          {
-            required: true,
-            message: this.$t('releasephysical.text11'),
-            trigger: 'change'
-          }
-        ],
-        // 商品设置
-        inventoryWarning: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qsrkcyj'),
-            trigger: 'blur'
-          }
-        ],
-        freight: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qxzyf'),
-            trigger: 'change'
-          }
-        ],
-        // distributionMode: [
-        //   {required: true, message: '请选择配送方式', trigger: 'change'},
-        //   {validator: validatePass, trigger: "change" },
-        // ],
-        checkedActivity: [
-          {
-            required: true,
-            message: this.$t('releasephysical.qxzzchd'),
-            trigger: 'change'
-          }
-        ]
+          attrImg: [
+            {
+              required: true,
+              message: this.$t('releasephysical.text11'),
+              trigger: 'change'
+            }
+          ],
+          // 商品设置
+          inventoryWarning: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qsrkcyj'),
+              trigger: 'blur'
+            }
+          ],
+          freight: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qxzyf'),
+              trigger: 'change'
+            }
+          ],
+          // distributionMode: [
+          //   {required: true, message: '请选择配送方式', trigger: 'change'},
+          //   {validator: validatePass, trigger: "change" },
+          // ],
+          checkedActivity: [
+            {
+              required: true,
+              message: this.$t('releasephysical.qxzzchd'),
+              trigger: 'change'
+            }
+          ]
 
-        // content: [
-        //   {
-        //     required: true,
-        //     message: this.$t('releasephysical.qsrspxq'),
-        //     trigger: 'blur'
-        //   }
-        // ]
+          // content: [
+          //   {
+          //     required: true,
+          //     message: this.$t('releasephysical.qsrspxq'),
+          //     trigger: 'blur'
+          //   }
+          // ]
       },
 
       check_attr: [], // 编辑复制选中回显属性数据
@@ -1333,9 +1570,10 @@ export default {
     let _this = this;
     this.loadKindDataFn()
     this.getBrandDataFn()
+
     this.loadSelectColorFn()
     this.loadSelectSizeFn()
-
+  
     if (this.$route.query.name && this.$route.query.name == 'editor') {
         this.$router.currentRoute.matched[2].meta.title = '编辑商品';
         this.pageType = this.$route.query.name;
@@ -1398,6 +1636,7 @@ export default {
           this.ruleForm.kindValue = resData.class_id;
           this.ruleForm.goodKindCidStr = resData.productClass;
           this.ruleForm.takePictures = resData.realPhotos.split(",");
+          
 
 
           // console.log("edit realPhotos")
@@ -1408,6 +1647,12 @@ export default {
           // this.editInitkindTableDataAll(resData.checked_attr_list);
           // this.getKindTableDataFn()
          
+
+    
+      
+          let  GeneralProperties =  eval(goodsAttribute.parameters);
+          this.GeneralProperties = GeneralProperties;
+
           if (res.data.data.video) {
             this.videoList.push({
               videoFile: res.data.data.video,
@@ -1567,6 +1812,16 @@ export default {
     $('#maskClass').remove()
     this.storeIds = getStorage('rolesInfos').storeId
     this.addIntroduction()
+    if (
+      this.$route.query.name == 'editor' ||
+      this.$route.query.name == 'copy'
+    ) {
+      // console.log("this.ruleForm.goodKindCidStr")
+      // console.log(this.ruleForm.goodKindCidStr)
+      // console.log("this.ruleForm.goodKindCidStr")
+      //   // 一般属性
+      //  this.getAttrFn(this.ruleForm.goodKindCidStr)
+    }
   },
   beforeRouteLeave (to, from, next) {
     if (
@@ -1744,6 +1999,36 @@ export default {
     //             }
     //         }
     // },
+    getAttrFn (cidStr) {
+      getAttr({
+            api: "admin.generalProperty.list",
+            // categories: "-148-150-151-"
+            categories: cidStr
+        }).then((res)=> {
+            let resData = res.data.data;
+            if (resData.length>0) {
+               this.GeneralProperties = res.data.data;
+            }
+        })
+    },
+    // offShelfFn () {
+    //     let _this = this;
+    //     offShell({
+    //         api: "mch.Mch.Goods.editConfigureStatus",
+    //         status: false
+    //     }).then((res)=> {
+             
+    //     })
+    // },
+    switchChangeFn ( row) {
+       console.log("row", row)
+        let flag =  row.statusFlag;
+        if (flag) {
+           row.status = 0;
+        } else {
+           row.status = 1;
+        }
+    },
     // 编辑页规格
     editLoadSelectKindDataFn () {
         const _this = this;
@@ -1943,8 +2228,15 @@ export default {
                     item.type = "";
                     // 上样采购价	
                     item.SamplePurchasePrice = "";
+                    // 供货价
+                    item.yj = "";
                     // 采购价	
                     item.purchasePrice = "";
+                    // 售价
+                    item.sj = "";
+
+
+                
                     // 包件数
                     item.bom_nums = "";
                     // 零售价
@@ -1971,8 +2263,12 @@ export default {
                     ];
                     item.imgFileList = [];
                     item.imgArr = [];
+                    item.status = 0;
+                    item.statusFlag = true;
                 }
                 kindTableData.push(item);
+                
+                
                 if (!hasFlagItem) {
                     _this.kindTableDataAll.push(item);
                 }
@@ -2019,9 +2315,9 @@ export default {
 
     
     updateKindTableDataAll (item) {
+
         // console.log("updateKindTableDataAll item", item)
-        let kindTableDataAll = this.kindTableDataAll;
-    
+        let kindTableDataAll = this.kindTableDataAll;  
         let length = kindTableDataAll.length;    
         let flag = false;
         for (let i=0; i<length; i++) {
@@ -2034,23 +2330,32 @@ export default {
             kindTableDataAll.push(item)
         }
         this.kindTableDataAll = kindTableDataAll;
+        // console.log("kindTableDataAll", this.kindTableDataAll )
     },
     // 编辑页 重组 table 
     getKindTableDataEditeFn () {  
         const editeTableArr = this.editeTableArr;
         const length = editeTableArr.length;
         let kindTableData = [];
-        console.log("editeTableArr")
-        console.log(editeTableArr)
-        console.log("editeTableArr")
+        // console.log("editeTableArr")
+        // console.log(editeTableArr)
+        // console.log("editeTableArr")
         for (let i=0; i<length; i++) {
                 let item = {};    
                 item.color = editeTableArr[i].attr_list[0].attr_name;
                 item.size = editeTableArr[i].attr_list[1].attr_name;
                 item.code = editeTableArr[i].product_code;
                 item.type = editeTableArr[i].marque;
+              
+                // 供货价
+                item.yj = editeTableArr[i].yj;
                 // 采购价	
                 item.purchasePrice =  editeTableArr[i].cbj;
+
+                // 售价
+                item.sj =  editeTableArr[i].sj;
+
+                
 
 
                 // 包件数
@@ -2071,7 +2376,10 @@ export default {
                     {value: 6, label: '8-15天'},
                     {value: 7, label: '3-7天'}
                 ]
+                
                 item.assemble =  editeTableArr[i].bag_type;
+                
+                
                 item.assembleArr = [
                     {label: 1, title: "整装"},
                     {label: 2, title: "组装"}
@@ -2083,14 +2391,16 @@ export default {
                 } 
               
                 item.imgArr = [];
+                item.status =   editeTableArr[i].status;
+                item.statusFlag = editeTableArr[i].status==0?true:false;
                 kindTableData.push(item);
         }
 
-        
         let colorArr = this.kindData[0].children;
         let colorLength = colorArr.length;
         let sizeArr =  this.kindData[1].children;
         let sizeLength = sizeArr.length;
+
         kindTableData.forEach((item,index)=>{
             for (let i=0; i<colorLength; i++) {
                 if (item.color == colorArr[i].value) {
@@ -2200,15 +2510,15 @@ export default {
           api: "mch.Mch.Goods.GetClassList"
       }).then((res)=>{
           const resData = res.data.data;
-          console.log("getKindData")
-          console.log(resData)
-          console.log("getKindData")
+          // console.log("getKindData")
+          // console.log(resData)
+          // console.log("getKindData")
           this.putKindDataFn(resData)
-          setTimeout(function () {
-              console.log(" _this.putKindDataArr")
-              console.log( _this.putKindDataArr)
-              console.log(" _this.putKindDataArr")
-          }, 5000)
+          // setTimeout(function () {
+          //     console.log(" _this.putKindDataArr")
+          //     console.log( _this.putKindDataArr)
+          //     console.log(" _this.putKindDataArr")
+          // }, 5000)
       })
     },
     putKindDataFn (childrenArr, cidStr) {
@@ -2238,7 +2548,6 @@ export default {
     },
 
 
-
     // 商品品牌
     getBrandDataFn () {
         const _this = this;
@@ -2255,24 +2564,14 @@ export default {
     },
 
 
-
-
     tableUpload (scope) {
         // console.log("row index", scope.$index)
         this.tableCurentIndex = scope.$index; 
         this.tableUploadFileList = this.kindTableData[this.tableCurentIndex].imgFileList;
         this.uploadDialogVisible = true;
-       
-       
-
-     
         const _this = this;
         const mchId = getStorage("mchId");
         const storeId = getStorage("rolesInfos").storeId;  
-
-  
- 
- 
 
         // uploadGetId({
         //   api: 'resources.file.uploadFiles',
@@ -2294,39 +2593,32 @@ export default {
         // })
     },
     tableChangeUploadFn (file, fileList) {
-        console.log("fileList", fileList)
+        // console.log("fileList", fileList)
         this.tableUploadFileList = fileList;
         this.kindTableData[this.tableCurentIndex].imgFileList = fileList;
      
-        console.log("kindTableData")
-        console.log(this.kindTableData)
-        console.log("kindTableData")
+        // console.log("kindTableData")
+        // console.log(this.kindTableData)
+        // console.log("kindTableData")
     },
     tableUploadConfirmFn() {
         this.kindTableData[this.tableCurentIndex].imgFileList =  this.tableUploadFileList;
         this.uploadDialogVisible = false;
         // this.tableUploadFileList = [];
-        console.log("tableUploadFileList", this.tableUploadFileList)
+        // console.log("tableUploadFileList", this.tableUploadFileList)
         //this.uploadImgFn()
     },
-
-
-
-
-
-
-
-
-
     selectKindFn (cid) {
- 
         let _this = this;
         let putKindDataArr = this.putKindDataArr;
         let length = putKindDataArr.length;
         let cidStr = "";
         for (let i=0; i<length; i++) {
             if (putKindDataArr[i].cid == cid) {
-                _this.ruleForm.goodKindCidStr = putKindDataArr[i].cidStr + "-";
+                cidStr = putKindDataArr[i].cidStr + "-";
+                _this.ruleForm.goodKindCidStr =  cidStr;
+                // console.log("cid",  _this.ruleForm.goodKindCidStr)
+                _this.getAttrFn(cidStr)
                 return ;
             }
         }
@@ -2967,11 +3259,9 @@ export default {
               })
             })
             page.attrTitle = newAttrTitle
-
             page.strArr = []
             setTimeout(function () {
               page.strArr = strArr
-
               console.log(page.attrTitle)
               console.log(page.strArr)
             }, 5)
@@ -2986,14 +3276,12 @@ export default {
                 }
                 return
               }
-
               // 如果该项属性的没有属性值，则删除该项重新递归
               if (th_title[i].attr_list.length == 0) {
                 th_title.splice(i, 1)
                 digui(th_title, i, _listX)
                 return
               }
-
               var xx = 0
               if (i == 0) {
                 // 第一个规格属性的格式是白色白色白色,黑色黑色黑色
@@ -3067,7 +3355,6 @@ export default {
         this.emptyAttr = false
       }
     },
-
     // sububmit
     submitForm (formName) {
       let kindTableData = this.kindTableData;
@@ -3080,8 +3367,12 @@ export default {
           newItem.product_code = item.code;
           // 型号
           newItem.marque = item.type;
+          // 供货价
+          newItem.yj = item.yj;
           // 采购价	
           newItem.cbj = item.purchasePrice;
+          // 售价
+          newItem.sj =  item.sj;
           // 包件数
           newItem.bom_nums = item.bom_nums;
 
@@ -3096,9 +3387,9 @@ export default {
               {attr_group_name: "颜色", attr_id:"", attr_name: item.color},
               {attr_group_name: "规格", attr_id:"", attr_name: item.size}
           ]
-          newItem.sj = "1";
+          // newItem.sj = "1";
           newItem.unit = "1";
-          newItem.yj = "1";
+          // newItem.yj = "1";
           newItem.cid = "1";
           newItem.bar_code = "1";
           newItem.img = item.imgFileList[0];
@@ -3107,13 +3398,14 @@ export default {
           } else {
             newItem.img_arr = "";
           }
-           
+          newItem.status = item.status;
+          newItem.statusFlag = item.statusFlag;
           subKindTableData.push(newItem)
       })
       console.log("subKindTableData")
       console.log(subKindTableData)
       console.log("subKindTableData")
-      
+ 
       // let kindTableArr = [
       //   {
       //     attr_list: [
@@ -3214,7 +3506,7 @@ export default {
                 realPhotos: this.ruleForm.takePictures.join(','),
                 //         // 采购价    
                 // cbj: '', //成本价
-                // yj: '', //原价
+                // yj: '', // 供货价
                 // sj: '', //售价
                 // unit: '', //单位
                 // kucun: '1000', //库存
@@ -3245,15 +3537,10 @@ export default {
                 // 产品内容
                 content: this.ruleForm.content,
                 unit: this.ruleForm.unit,
-               
-               
-               
-               
-               
-               
-               
                 video: this.videoUp,
-                proVideo: this.videoUp2
+                proVideo: this.videoUp2,
+                // 一般属性
+                parameters: JSON.stringify(this.GeneralProperties)
               },
               async: true,
               success: res => {
@@ -3347,7 +3634,7 @@ export default {
 
                 //         // 采购价    
                 // cbj: '', //成本价
-                // yj: '', //原价
+                // yj: '', // 供货价
                 // sj: '', //售价
                 // unit: '', //单位
                 // kucun: '1000', //库存
