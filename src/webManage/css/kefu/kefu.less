@@ -1,0 +1,343 @@
+/* 客服开始 */
+.kefuTc{
+  /deep/.el-dialog{
+    .el-dialog__header{
+      padding: 0 !important;
+    }
+    .el-dialog__body{
+      padding: 0 !important;
+    }
+  }
+
+  .pageBox_kf{
+    min-width: 860px;
+    height: 598px;
+    background-color: #F9F9F9;
+    display: flex;
+  }
+
+  /* left */
+  .kf_left{
+    width: 222px;
+    height: 100%;
+    padding: 12px 8px 8px 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+  .left_title{
+    font-size: 12px;
+    color: #020202;
+  }
+  .left_input{
+    width: 100%;
+    height: auto;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    margin: 8px 0;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+  }
+  .left_input>img{
+    width: 13px;
+    height: 13px;
+    margin-right: 8px;
+  }
+  .left_input>input{
+    border: none;
+  }
+  /* 滚动条样式 width设置y轴 height设置x轴 */
+  .left_list::-webkit-scrollbar {
+    width: 2px;
+  }
+  /* 滚动条滑块（里面小方块） */
+  .left_list::-webkit-scrollbar-thumb {
+    background-color: #E3E3E3;
+    border-radius: 10px;
+   }
+  /* 滚动条轨道 */
+  .left_list::-webkit-scrollbar-track {
+    border-radius: 0;
+   }
+  .left_list{
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+  .list_item_active{
+    border-radius: 2px;
+    background-color: #E3E3E3;
+  }
+  .list_item{
+    padding: 8px 6px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .item_img>img{
+    width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    margin-right: 8px;
+  }
+  .item_content{
+    display: flex;
+    flex-direction: column;
+  }
+  .content_title{
+    color: #020202;
+    font-size: 14px;
+    width: 120px;
+    height: auto;
+    display:-webkit-inline-box;
+    overflow: hidden; /*超出隐藏*/
+    text-overflow: ellipsis;/*隐藏后添加省略号*/
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:1;/*想显示多少行*/
+  }
+  .content_message{
+    margin-top: 8px;
+    color: #999999;
+    font-size: 12px;
+    width: 120px;
+    height: auto;
+    display:-webkit-inline-box;
+    overflow: hidden; /*超出隐藏*/
+    text-overflow: ellipsis;/*隐藏后添加省略号*/
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:1;/*想显示多少行*/
+  }
+  .item_end{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .end_time{
+    color: #999999;
+    font-size: 12px;
+    text-align: end;
+  }
+  .end_num{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  .end_num>span{
+    color: #ffffff;
+    font-size: 12px;
+    background-color: #D4282D;
+    border-radius: 20px;
+    padding: 0 5px;
+    box-sizing: border-box;
+  }
+
+  /* right */
+  .kf_right{
+    flex: 1;
+    height: 100%;
+    border-left: 1px solid #EEEEEE;
+    display: flex;
+    flex-direction: column;
+  }
+  .right_title{
+    width: 100%;
+    padding: 18px 12px;
+    box-sizing: border-box;
+    background-color: #FAFAFA;
+    border-bottom: 1px solid #EEEEEE;
+    display: flex;
+    align-items: center;
+  }
+  .title_name{
+    flex: 1;
+    font-size: 16px;
+    font-weight: bold;
+    color: #020202;
+  }
+  .title_del{
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .el-icon-close{
+    font-size: 22px;
+    color: #999999;
+  }
+  .right_message{
+    width: 100%;
+    height: 404px;
+    padding: 12px;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+  .message_mch{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .mch_content{
+    padding: 10px 14px;
+    box-sizing: border-box;
+    background-color: #F3F3F3;
+    border-radius: 2px;
+    color: #020202;
+    font-size: 13px;
+    position: relative;
+    max-width: 300px;
+  }
+  .mch_content::before{
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    top: 0px;
+    left: -6px;
+    border-top: solid 10px transparent;
+    border-right: solid 10px #F3F3F3;
+    border-bottom: solid 10px transparent;
+  }
+  .kefu_content_img>a>img{
+    max-width: 272px;
+    height: auto;
+  }
+  .kefu_content_text{
+    max-width: 580px;
+    word-wrap: break-word;
+  }
+  .message_user{
+    display: flex;
+    /* align-items: center; */
+    justify-content: flex-end;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .user_content{
+    padding: 10px 14px;
+    box-sizing: border-box;
+    background-color: #F6E4E4;
+    border-radius: 2px;
+    color: #020202;
+    font-size: 13px;
+    position: relative;
+    max-width: 300px;
+  }
+  .user_content::before{
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    top: 0px;
+    right: -6px;
+    border-top: solid 10px transparent;
+    border-left: solid 10px #F6E4E4;
+    border-bottom: solid 10px transparent;
+  }
+  .message_user>img{
+    width: 32px;
+    height: 32px;
+    border-radius: 2px;
+    margin-left: 10px;
+  }
+  .right_img{
+    width: 100%;
+    height: auto;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    border-top: 1px solid #EEEEEE;
+    border-bottom: 1px solid #EEEEEE;
+    display: flex;
+    align-items: center;
+  }
+  .img_bq{
+    position: relative;
+  }
+  .img_bq>img{
+    width: 20px;
+    height: 20px;
+    margin-right: 20px;
+  }
+  .BQlist{
+    width: 510px;
+    height: 100px;
+    background-color: #F3F3F3;
+    padding: 10px 0 10px 10px;
+    box-sizing: border-box;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px 1px;
+    border-radius: 2px;
+    position: absolute;
+    left: 0;
+    top: -100px;
+    overflow-y: auto;
+  }
+  .BQlist>span{
+    max-width: 20px;
+    height: auto;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
+  .img_tp{
+    position: relative;
+    img{
+      width: 20px;
+      height: 20px;
+    }
+  }
+  .right_input{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .kefu_input{
+    flex: 1;
+    height: 91px;
+    padding: 12px;
+    padding-right: 0;
+    box-sizing: border-box;
+    display: flex;
+  }
+  ::v-deep .el-textarea__inner{
+    padding: 0 !important;
+    border: none !important;
+    background-color: initial !important;
+    height: 100% !important;
+  }
+  ::v-deep .el-textarea__inner::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::v-deep .el-textarea__inner::-webkit-scrollbar-thumb {
+    background-color: #E3E3E3;
+    border-radius: 10px;
+  }
+  .kefu_buttom{
+    height: 91px;
+    padding: 12px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-end;
+  }
+  .kefu_buttom>div{
+    display: inline-block;
+    width: 62px;
+    height: 30px;
+    background: #D4282D;
+    border-radius: 2px;
+    color: #ffffff;
+    text-align: center;
+    line-height: 30px;
+  }
+}
+/* 客服结束 */

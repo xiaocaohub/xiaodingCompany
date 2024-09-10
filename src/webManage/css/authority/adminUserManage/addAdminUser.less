@@ -1,0 +1,95 @@
+.container {
+  .el-input{
+    width: 580px;
+  }
+  width: 100%;
+  height: 737px;
+  background-color: #fff;
+  padding: 40px 0 0 0;
+  color: #414658;
+  /deep/.add-menu {
+    display: flex;
+    justify-content: center;
+    .el-form-item {
+      display: flex;
+      &:not(:last-child) {
+        .el-form-item__content {
+          margin-left: 0px !important;
+        }
+      }
+      // .el-form-item__content {
+      //   width: 580px;
+      // }
+      .select-input {
+        width: 580px;
+        height: 40px;
+      }
+    }
+
+    .user-list {
+      .dictionary-list {
+        background: #FFFFFF;
+        border-radius: 4px;
+        margin-left: 110Px;
+        border: 1px solid #E9ECEF;
+        /deep/.el-table__header {
+          thead {
+            tr {
+              th{
+                height: 61px;
+                text-align: center;
+                font-size: 14px;
+                font-weight: bold;
+                color: #414658;
+              }
+            }
+          }
+        }
+        /deep/.el-table__body {
+          tbody {
+            tr {
+              td{
+                height: 92px;
+                text-align: center;
+                font-size: 14px;
+                color: #414658;
+                font-weight: 400;
+              }
+            }
+          }
+        }
+        .el-table {
+          .cell {
+            text-align: center;
+          }
+        }
+      }
+      .Search {
+        display: flex;
+        margin-left: 110Px;
+        margin-bottom: 16px;
+        .Search-select {
+          width: 180px;
+          margin-right: 8px;
+        }
+        
+        .Search-input {
+          width: 280px;
+          margin-right: 8px;
+        }
+      }    
+    }
+
+  }
+
+  .merchants-list {
+    width: 100%;
+    height: 671px;
+    background-color: #fff;
+  }
+
+  /deep/.el-form-item__label {
+    font-weight: normal;
+  }
+}
+
