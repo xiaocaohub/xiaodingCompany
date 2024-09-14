@@ -1,0 +1,55 @@
+.order_list_page{
+    background:#fff;
+    padding-bottom: 50px;
+}
+.order_list_page .nav_list_con{
+
+    overflow: hidden;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.order_list_page .nav_list_con > li{
+     width:150px;
+     height: 50px;
+     line-height: 50px;
+
+     float: left;
+     font-size: 16px;
+     text-align: center;
+     cursor: pointer;
+     border-bottom:2px solid transparent;
+}
+.nav_list_con > li.on{
+    border-color:#2890ff;     
+    color: #c6a189;
+}
+.operate_btn_group .btn{
+     color: #00c0ff;
+     cursor: pointer;
+}
+.page_con{
+    margin:100px;
+    text-align: center;
+}
+.order_info_item{
+
+
+
+
+    overflow:hidden;
+    margin-bottom:20px;
+}
+.order_info_item .title {
+    width: 79px;
+
+    float: left;
+
+    height: 40px;
+    line-height: 40px;
+    overflow: hidden;
+}
+
+.order_info_item .text{
+    width:85%;
+}

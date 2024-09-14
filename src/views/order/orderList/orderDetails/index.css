@@ -1,0 +1,63 @@
+.order_detail_page{
+    background: #fff;
+    padding-bottom: 50px;
+}
+.order_detail_page .big_title{
+    height: 60px;
+    line-height: 60px;
+    font-size: 20px;
+    text-indent: 20px;
+    border:1px solid #e5e5e5;
+}
+
+.order_detail_page .info_list_con{
+    margin-bottom: 60px;
+    overflow: hidden;
+}
+.order_detail_page .info_list_con > li {
+    width: 28%;
+    float: left;
+    margin-left: 5%;
+} 
+
+.order_detail_page .info_list_con > li .item{
+    margin-top: 20px;
+    overflow: hidden;
+}
+    
+.order_detail_page .info_list_con > li .item .tit{
+    width:100px;
+    
+    float: left;
+}
+
+.order_detail_page .info_list_con > li .item  .txt{
+     width:75%;
+ 
+     float: left;
+
+
+}
+.order_detail_page .beihuo_btn_group{
+     margin:20px 0 60px;
+     overflow: hidden;
+}
+
+
+.order_detail_page .beihuo_btn_group .btn{
+    float: right;
+    margin: 0 10px;
+}
+.order_detail_page  .record_con{
+    
+    /* width:50%; */
+ 
+    border:1px solid gray;
+
+    margin:20px auto 100px;
+}
+.order_good_table .good_img{
+    
+    width:180px;
+    height:120px;
+}
