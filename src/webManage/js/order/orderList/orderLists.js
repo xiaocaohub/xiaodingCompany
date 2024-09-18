@@ -13,6 +13,7 @@ export default {
   mixins: [mixinstest],
   data () {
     return {
+
       button_list: [],
       stateList: [
         {

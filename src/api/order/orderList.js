@@ -17,6 +17,13 @@ export const delOrder = params => {
   });
 };
 
+export const confirmOrder = params => {
+  return request({
+    method: "post",
+    params
+  });
+};
+
 // 订单详情
 export const orderDetailsInfo = params => {
   return request({
