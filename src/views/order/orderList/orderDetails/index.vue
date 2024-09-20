@@ -71,9 +71,7 @@
         </ul>
 
         <div class="big_title">商品信息</div>
-         
         <el-table ref="multipleTable" :data="goodArr" tooltip-effect="dark" style="width: 100%"  
-        
             :header-cell-style="{textAlign:'center'}"
             :cell-style="{textAlign:'center'}"
             @selection-change="handleSelectionChange" class="order_good_table">
@@ -121,18 +119,85 @@
         </el-table>
         
         <div class="beihuo_btn_group">
-            <el-button class="btn">安排发货</el-button>
-            <el-button class="btn">撤销工厂备货完成</el-button>
 
-            <el-button class="btn">工厂备货完成</el-button>
+            <el-button type="success" class="btn" v-if="confirmGoodStatus && multipleSelection.length == goodArr.length" @click="sendGoodsFn">安排发货</el-button>
+            <el-button type="primary" class="btn" v-else @click="stockUpGoodFn">工厂备货完成</el-button>    
+            <el-button class="btn" v-if="confirmGoodStatus" @click="cancelGoodFn">撤销工厂备货完成</el-button>
+           
         </div>
-        <div class="big_title">订单处理流程</div>
-        <div class="record_con">
+
+        <div class="big_title">发货记录</div>
+        
+        <div class="send_good_title_con">
+            <div class="info">
+                <span>YS2408290000021-1</span>
+
+                <span>安排时间: 2024-08-27  13:52:15</span>
+                <span>发货时间: - -</span>
+            </div>
+
+
+            <div class="btn_con">
+                <p class="title_msg">注：先打印标签，后打印发货单，确保标签与发货单件数一致！</p>
+                <div class="btn_group">
+                    <el-button type="success">批量打印标签</el-button>
+                
+                    <el-button type="primary">打印发货单</el-button>
+                
+                    <el-button type="danger">取消安排</el-button>
+     
+                    <el-button type="danger" @click="confirmSendGoodDialogVisible = true">确认发货</el-button>
+
+          
+                </div>
+            </div>
+        </div>
+        <el-table :data="sendGoodTableData"  style="width: 100%" class="send_good_table">
+
+            <el-table-column  label="发货单/签收单" width="290">
+                <template slot-scope="scope">
+                    <div> ---- </div>
+                </template>
+            </el-table-column>
+            <el-table-column prop="date" label="型号/规格" width="400">
+                <template slot-scope="scope">
+                    <div> 
+                        <img :src=" scope.row.img " class="good_img" alt=""/>
+
+                        <p>编码: {{  scope.row.productCode  }}</p>
+                        <p>规格：{{  scope.row.attribute }}</p>
+                        <p>型号: {{  scope.row.marque  }}</p>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column prop="num" label="发货数量" width="150">
+                <template slot-scope="scope">
+                    <div> 
+
+
+                        {{  scope.row.num }}
+                    </div>
+                </template>
+            </el-table-column>
+
+            <el-table-column prop="date" label="操作" width="150">
+                <template slot-scope="scope">
+                    <div class="btn_group">
+                        <div class="btn">打印标签</div>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+
+    
+        <!-- <div class="big_title">订单处理流程</div> -->
+    
+        <!-- <div class="record_con">
             <el-timeline>
                 <el-timeline-item timestamp="2018/4/12" placement="top">
                 <el-card>
                     <h4>提交</h4>
-                    <p>王小虎 提交于 2018/4/12 20:46</p>
+                    <p> 提交于 2018/4/12 20:46</p>
                     
                     <el-table :data="orderTimeGoodTable" style="width: 29%;margin-top:10px;" :border="true">
                         <el-table-column
@@ -150,24 +215,56 @@
                 <el-timeline-item timestamp="2018/4/3" placement="top">
                 <el-card>
                     <h4>提交</h4>
-                    <p>王小虎 提交于 2018/4/3 20:46</p>
+                    <p>提交于 2018/4/3 20:46</p>
                 </el-card>
                 </el-timeline-item>
                 <el-timeline-item timestamp="2018/4/2" placement="top">
                 <el-card>
                     <h4>提交</h4>
-                    <p>王小虎 提交于 2018/4/2 20:46</p>
+                    <p> 提交于 2018/4/2 20:46</p>
                 </el-card>
                 </el-timeline-item>
             </el-timeline>
-        </div>
+        </div> -->
+
+
+            <el-dialog
+                title="确认发货,上传发货单"
+                :visible.sync="confirmSendGoodDialogVisible"
+                width="30%"
+                :before-close="handleClose">
+               
+               
+
+
+                <el-form ref="form" :model="confirmSendGoodForm" label-width="80px">
+                    <el-form-item label="发货清单:">
+                        <l-upload :limit="5" v-model="confirmSendGoodForm.sendGoodPictures" text="最多上传5张, 商品白底图尺寸450*450像素, 每张图限500K以内">
+                        </l-upload>
+                    </el-form-item>
+
+
+
+                   
+
+                    <el-form-item label="发货备注:">
+                      
+                        <el-input type="textarea" :rows="2" placeholder="请输入物流单号或其他备注信息" v-model="confirmSendGoodForm.remark"> </el-input>
+                    </el-form-item>
+                </el-form>
+
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="confirmSendGoodDialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="confirmGoodFn">确 定</el-button>
+                </span>
+            </el-dialog>
     </div>
 </template>
 
 <script>
 
 
-import {  orderDetailsInfo } from '@/api/order/orderList';
+import {  orderDetailsInfo, stockUpGood, sendGoods, confirmSendGood } from '@/api/order/orderList';
 export default {
     data () {
         return {
@@ -201,7 +298,27 @@ export default {
                 }
             ],
 
-            orderInfon: ""
+            orderInfon: "",
+
+            // 备货状态
+            confirmGoodStatus: false,
+            //  确认发货商品  
+
+            sendGoodTableData: [
+                {
+                    date: '2016-05-02'
+                }
+            ],
+            confirmSendGoodDialogVisible: false,
+
+
+            // 确认发货 form
+
+            confirmSendGoodForm: {
+            
+                sendGoodPictures: "",
+                remark: ""
+            }
         }
     },
     mounted () {  
@@ -216,6 +333,7 @@ export default {
             
             this.getOrderInfoFn()
         },
+
         getOrderInfoFn: function () {
             let _this = this;
             orderDetailsInfo({
@@ -226,11 +344,113 @@ export default {
             }).then((res)=> {
                 let resData = res.data.data;   
                 if (resData) {
-                     _this.orderInfon = resData;
-                  _this.goodArr = resData.details;
+                    _this.orderInfon = resData;
+                    _this.goodArr = resData.details;
+                    _this.sendGoodTableData = resData.details;
+                    console.log(" _this.goodArr")
+
+                    console.log( _this.goodArr)
+                    console.log(" _this.goodArr")
                 }
             })              
-        }    
+        },
+        handleSelectionChange(val) {
+            console.log("val")
+            console.log(val)
+            console.log("val")
+        
+            this.multipleSelection = val;
+        },
+        
+        // 备货完成
+        stockUpGoodFn: function () {
+            let _this = this;
+
+            let goodArr = this.goodArr;
+
+            let detailNos = "";
+            if (this.multipleSelection.length == 0) {
+                this.$message.error('请选择商品');    
+                return ;
+            }
+            this.confirmGoodStatus = true;
+ 
+
+
+
+            goodArr.forEach((item)=> {
+                detailNos += item.detailNo + ",";
+            })
+            stockUpGood({
+                api: "mch.App.orderV2.ready",
+                orderNo: this.orderNo,
+                detailNos: detailNos
+
+            }).then((res)=> {
+                if (res.data.code == 200) {
+                    _this.$message({
+                        showClose: true,
+                        message: res.data.message,
+                        type: 'success'
+                    });
+                } else {
+                    _this.$message({
+                        showClose: true,
+                        message: res.data.message,         
+                        type: 'error'
+                    });
+                }
+            })
+        },
+        // 撤销工厂备货完成
+
+            cancelGoodFn: function () {
+            this.confirmGoodStatus = false;        
+            this.$refs.multipleTable.clearSelection()
+        },
+        // 安排发货
+        sendGoodsFn: function () {
+            let _this = this;
+            sendGoods({
+                api: "mch.App.orderV2.shipment",
+                orderNo: this.orderNo
+            }).then((res)=> { 
+        
+                if (res.data.code == 200) {
+                    _this.$message({
+                        message: res.data.message,
+                        type: 'success'
+                    });
+                } else {
+                    _this.$message({
+                        message: res.data.message,                
+                        type: 'error'
+                    });
+                }
+            })          
+        },
+
+        // 确认发货
+
+        confirmGoodFn: function () {
+
+           let _this = this;
+
+
+            this.confirmSendGoodDialogVisible = false;
+             
+            confirmSendGood({
+                api: "mch.App.orderV2.sendUpdate",
+               
+                orderNo: this.orderNo,
+
+                photo:  this.confirmSendGoodForm.sendGoodPictures[0]
+            }).then((res)=>{
+                console.log("confirmSendGoodForm")
+                console.log(res)
+                console.log("confirmSendGoodForm")
+            })
+        }        
     }
 }
 </script>

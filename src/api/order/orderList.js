@@ -31,6 +31,35 @@ export const orderDetailsInfo = params => {
     params
   });
 };
+// 安排发货
+export const sendGoods = params => {
+
+  return request({
+  
+  
+    method: "post",
+    params
+  });
+};
+
+
+
+// 备货完成
+export const stockUpGood = params => {
+  return request({
+      method: "post",
+      params
+  });
+};
+
+
+
+export const confirmSendGood = params => {
+  return request({
+      method: "post",
+      params
+  });
+};
 
 // 编辑订单页面详情
 export const editOrderView = params => {

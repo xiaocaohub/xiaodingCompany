@@ -61,3 +61,25 @@
     width:180px;
     height:120px;
 }
+.send_good_title_con{
+     height:100px;
+}
+.send_good_title_con .info{
+     float: left;
+     margin-top:40px;
+}
+.send_good_title_con  .btn_con{
+     float:right;
+}
+.send_good_title_con  .btn_con .title_msg{
+    color: red;
+    margin-bottom: 20px;
+}
+.send_good_table .btn_group .btn{
+    color: #00c0ff;
+}
+.send_good_table .good_img{
+    display: block;
+    width: 90px;
+    height: 60px;
+}

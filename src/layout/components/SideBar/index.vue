@@ -265,6 +265,9 @@ export default {
           roleId: 0
         }
       }).then(routes => {
+         console.log("routes routes routes-------------")
+         console.log(routes)
+         console.log("routes routes routes-------------")
         if (routes.data.code == '200') {
           // let route = routes.data.data;
           let myButtonList = cloneDeep(routes.data.data).list
