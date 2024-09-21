@@ -98,7 +98,7 @@
             </el-table-column>
             <el-table-column prop="address" label="采购价(元)" width="150">
                 <template slot-scope="scope">
-                    <div>{{  scope.row.costPrice?scope.row.costPrice:"----" }}</div>
+                    <div>{{  scope.row.settlementPrice?scope.row.settlementPrice:"----" }}</div>
                 </template>
             </el-table-column>
             <el-table-column prop="address" label="采购数"  width="100">
@@ -139,7 +139,7 @@
 
             <div class="btn_con">
                 <p class="title_msg">注：先打印标签，后打印发货单，确保标签与发货单件数一致！</p>
-                <div class="btn_group">
+                <div class="btn_group" v-if="confirmSendFlag">
                     <el-button type="success">批量打印标签</el-button>
                 
                     <el-button type="primary">打印发货单</el-button>
@@ -156,7 +156,7 @@
 
             <el-table-column  label="发货单/签收单" width="290">
                 <template slot-scope="scope">
-                    <div> ---- </div>
+                    <div> <img :src=" confirmSendGoodForm.sendGoodPictures[0] " alt="" class="send_good_img"/> </div>
                 </template>
             </el-table-column>
             <el-table-column prop="date" label="型号/规格" width="400">
@@ -280,7 +280,6 @@ export default {
                     goodName: 'LK-X2208-XXY',
                     count: 1
                 }
-
             ],
             multipleSelection: [],
             activities: [
@@ -297,25 +296,21 @@ export default {
                     timestamp: '2018-04-11'
                 }
             ],
-
             orderInfon: "",
-
             // 备货状态
             confirmGoodStatus: false,
-            //  确认发货商品  
-
+            //  确认发货商品
             sendGoodTableData: [
                 {
                     date: '2016-05-02'
                 }
             ],
+
+
             confirmSendGoodDialogVisible: false,
-
-
+            confirmSendFlag: true,
             // 确认发货 form
-
             confirmSendGoodForm: {
-            
                 sendGoodPictures: "",
                 remark: ""
             }
@@ -440,15 +435,24 @@ export default {
             this.confirmSendGoodDialogVisible = false;
              
             confirmSendGood({
-                api: "mch.App.orderV2.sendUpdate",
-               
-                orderNo: this.orderNo,
 
+
+
+                api: "mch.App.orderV2.sendUpdate",   
+                orderNo: this.orderNo,
                 photo:  this.confirmSendGoodForm.sendGoodPictures[0]
             }).then((res)=>{
-                console.log("confirmSendGoodForm")
-                console.log(res)
-                console.log("confirmSendGoodForm")
+                if (res.data.code == 200) {
+                    _this.$message({
+                        message: res.data.message,
+                        type: 'success'
+                    });
+                } else {
+                    _this.$message({
+                        message: res.data.message,                
+                        type: 'error'
+                    });
+                }
             })
         }        
     }
