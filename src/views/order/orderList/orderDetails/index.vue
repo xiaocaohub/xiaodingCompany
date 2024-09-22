@@ -6,7 +6,7 @@
            
             <li>
                 <div class="item">
-                    <div class="tit">订单编号</div>
+                    <div class="tit">订单编号---{{  orderInfon.status  }}</div>
                     <div class="txt">{{this.orderInfon.orderParentNo}}</div>
                 </div>
                 <div class="item">
@@ -120,10 +120,17 @@
         
         <div class="beihuo_btn_group">
 
-            <el-button type="success" class="btn" v-if="confirmGoodStatus && multipleSelection.length == goodArr.length" @click="sendGoodsFn">安排发货</el-button>
+            <!-- <el-button type="success" class="btn" v-if="confirmGoodStatus && multipleSelection.length == goodArr.length" @click="sendGoodsFn">安排发货</el-button>
             <el-button type="primary" class="btn" v-else @click="stockUpGoodFn">工厂备货完成</el-button>    
-            <el-button class="btn" v-if="confirmGoodStatus" @click="cancelGoodFn">撤销工厂备货完成</el-button>
+            <el-button class="btn" v-if="confirmGoodStatus" @click="cancelGoodFn">撤销工厂备货完成</el-button> -->
            
+            <el-button type="primary" class="btn" v-if="sendGoodStatus==1 || sendGoodStatus==1.5" @click="stockUpGoodFn">工厂备货完成</el-button>   
+            <el-button type="success" class="btn" v-if="sendGoodStatus==2 && multipleSelection.length == goodArr.length" @click="sendGoodsFn">安排发货</el-button>
+        
+
+
+            
+            <el-button class="btn" v-if="sendGoodStatus==2 || sendGoodStatus==1.5" @click="cancelGoodFn">撤销工厂备货完成</el-button>
         </div>
 
         <div class="big_title">发货记录</div>
@@ -137,22 +144,19 @@
             </div>
 
 
-            <div class="btn_con">
-                <p class="title_msg">注：先打印标签，后打印发货单，确保标签与发货单件数一致！</p>
-                <div class="btn_group" v-if="confirmSendFlag">
+            <div class="btn_con" >
+                <p class="title_msg" v-if="sendGoodStatus == 3">注：先打印标签，后打印发货单，确保标签与发货单件数一致！</p>
+                <div class="btn_group" v-if="sendGoodStatus == 3">
                     <el-button type="success">批量打印标签</el-button>
-                
                     <el-button type="primary">打印发货单</el-button>
-                
-                    <el-button type="danger">取消安排</el-button>
-     
+                    <el-button type="danger" @click="cancelSendGoodsFn">取消安排</el-button>
                     <el-button type="danger" @click="confirmSendGoodDialogVisible = true">确认发货</el-button>
-
-          
                 </div>
+                <el-button type="success" v-if="sendGoodStatus==5" class="edit_send_good" @click="confirmSendGoodDialogVisible=true">编辑发货单</el-button>
+
             </div>
         </div>
-        <el-table :data="sendGoodTableData"  style="width: 100%" class="send_good_table">
+        <el-table :data="sendGoodTableData"  style="width: 100%" class="send_good_table" v-if="sendGoodStatus==3">
 
             <el-table-column  label="发货单/签收单" width="290">
                 <template slot-scope="scope">
@@ -262,13 +266,11 @@
 </template>
 
 <script>
-
-
 import {  orderDetailsInfo, stockUpGood, sendGoods, confirmSendGood } from '@/api/order/orderList';
+import { setStorage, getStorage } from "@/utils/storage";
 export default {
     data () {
         return {
-
             orderNo: "",
             goodArr: [],
             orderTimeGoodTable: [
@@ -305,15 +307,15 @@ export default {
                     date: '2016-05-02'
                 }
             ],
-
-
             confirmSendGoodDialogVisible: false,
             confirmSendFlag: true,
             // 确认发货 form
             confirmSendGoodForm: {
                 sendGoodPictures: "",
                 remark: ""
-            }
+            },
+            sendGoodFlag: false, // 确认发货
+            sendGoodStatus: 1  //  发货状态 1备货中,  2安排发货, 3确认发货
         }
     },
     mounted () {  
@@ -328,7 +330,6 @@ export default {
             
             this.getOrderInfoFn()
         },
-
         getOrderInfoFn: function () {
             let _this = this;
             orderDetailsInfo({
@@ -342,6 +343,14 @@ export default {
                     _this.orderInfon = resData;
                     _this.goodArr = resData.details;
                     _this.sendGoodTableData = resData.details;
+          
+                    if (resData.status<3) {
+                        _this.sendGoodStatus = "";
+                    }
+                    if (resData.status == 5) {
+                        _this.sendGoodStatus = resData.status;
+                    }
+                     
                     console.log(" _this.goodArr")
 
                     console.log( _this.goodArr)
@@ -364,15 +373,20 @@ export default {
             let goodArr = this.goodArr;
 
             let detailNos = "";
+           
             if (this.multipleSelection.length == 0) {
+           
                 this.$message.error('请选择商品');    
                 return ;
             }
             this.confirmGoodStatus = true;
- 
 
-
-
+            if (this.multipleSelection.length > 0 && this.multipleSelection.length<goodArr.length) { 
+                this.sendGoodStatus = 1.5;
+            }
+            if (this.multipleSelection.length == goodArr.length) { 
+                this.sendGoodStatus = 2;
+            }
             goodArr.forEach((item)=> {
                 detailNos += item.detailNo + ",";
             })
@@ -398,14 +412,16 @@ export default {
             })
         },
         // 撤销工厂备货完成
+        cancelGoodFn: function () {
+            this.sendGoodStatus = 1;
+            this.confirmGoodStatus = false;
 
-            cancelGoodFn: function () {
-            this.confirmGoodStatus = false;        
             this.$refs.multipleTable.clearSelection()
         },
         // 安排发货
         sendGoodsFn: function () {
             let _this = this;
+            _this.sendGoodStatus = 3;
             sendGoods({
                 api: "mch.App.orderV2.shipment",
                 orderNo: this.orderNo
@@ -416,7 +432,8 @@ export default {
                         message: res.data.message,
                         type: 'success'
                     });
-                } else {
+                    _this.sendGoodStatus = 3;
+                } else {   
                     _this.$message({
                         message: res.data.message,                
                         type: 'error'
@@ -424,29 +441,28 @@ export default {
                 }
             })          
         },
+        // 取消安排
+        cancelSendGoodsFn: function () {
+            this.sendGoodStatus = 2;
+        },
 
         // 确认发货
-
         confirmGoodFn: function () {
-
            let _this = this;
-
-
             this.confirmSendGoodDialogVisible = false;
-             
+            this.sendGoodFlag = true;
             confirmSendGood({
-
-
-
                 api: "mch.App.orderV2.sendUpdate",   
                 orderNo: this.orderNo,
                 photo:  this.confirmSendGoodForm.sendGoodPictures[0]
             }).then((res)=>{
                 if (res.data.code == 200) {
+                    _this.sendGoodStatus = 5; 
                     _this.$message({
                         message: res.data.message,
                         type: 'success'
                     });
+                    _this.sendGoodFlag = true;
                 } else {
                     _this.$message({
                         message: res.data.message,                
