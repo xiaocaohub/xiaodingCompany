@@ -74,7 +74,8 @@
                 type="primary"
                 @click.native.prevent="submitForm('ruleForm')"
               >
-                {{ $t('login.dl') }}
+                  
+                 登录 
               </el-button>
             </el-form-item>
           </el-form>

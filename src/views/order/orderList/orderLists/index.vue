@@ -6,14 +6,14 @@
             
           
         </ul>
-        
         <el-table :data="orderList" style="width: 100%;margin:0 20px;">
             <el-table-column prop="orderNoInfo" label="子订单号" width="200">
                 <template slot-scope="scope">
                     <div>
                         <p>{{ scope.row.orderNoInfo.orderNo }}</p>
-                        <p>-----</p>
-                        <p>{{ scope.row.orderNoInfo.orderType }}</p>
+                        <p>--</p>
+                        <p>{{ scope.row.orderNoInfo.orderType | orderTypeFn }}</p>
+             
                     </div>
                 </template>
             </el-table-column>
@@ -134,40 +134,16 @@ export default {
             orderNo: "",
             pageNum: 1,
             pageSize: 10,
-            orderList: [
-                // {
-                //     orderNoInfo: {
-                //         orderNo: "",
-                //         name: "-----",
-                //         orderType: ""
-                //     },
-                //     sourceName: "",
-                //     channel: "",
-                //     payPrice: "",
-                //     addressInfo: {
-                //         warehouseName: "",
-                //         name: "",
-                //         mobile: "",
-                //         provice: "",
-                //         city: "",
-
-                //         area: "",
-                //         address: ""
-                //     },
-                //     times: {
-                //         expectedDeliveryTime: orderItem.expectedDeliveryTime,
-                //         estimatedDeliveryTime: orderItem.estimatedDeliveryTime
-                //     },
-                //     name: "",
-                //     statusRemark: ""
-                // }
-            ], 
+            orderList: [],
+            
+            
             total: 0,
             orderDialogVisible: false,
             dateStr: "",
             date: "",
             time: "",
             remark: "",
+            
             currentOrder: ""
         }
     },
@@ -177,9 +153,11 @@ export default {
          })
     },
     methods: {
+
         selectNavFn: function (index) {
             let _this = this;
             if (this.tabIndex != index) {
+        
                 this.tabIndex = index;
             }
             this.status = this.tabNav[index].status;
@@ -286,6 +264,18 @@ export default {
                 }
                 
             })            
+        }
+    },
+    filters: {
+        orderTypeFn: function (status) {
+            switch (status) {
+                case 1:
+                    return "自营订单";
+                    break ;
+                case 2:
+                    return "pop";
+                    break ;
+            }
         }
     }
 }

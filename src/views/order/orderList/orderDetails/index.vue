@@ -6,12 +6,12 @@
            
             <li>
                 <div class="item">
-                    <div class="tit">订单编号---{{  orderInfon.status  }}</div>
-                    <div class="txt">{{this.orderInfon.orderParentNo}}</div>
+                    <div class="tit">订单编号 </div>
+                    <div class="txt">{{this.orderInfon.orderNo}}</div>
                 </div>
                 <div class="item">
                     <div class="tit">订单状态</div>
-                    <div class="txt">{{  this.orderInfon.statusRemark?this.orderInfon.statusRemark:"----" }}</div>
+                    <div class="txt">{{  this.orderInfon.statusRemark?this.orderInfon.statusRemark:"--" }}</div>
                 </div>
                 <div class="item">
                     <div class="tit">结算金额</div>
@@ -20,52 +20,61 @@
                 <div class="item">
                     <div class="tit">渠道</div>
 
-                    <div class="txt">{{   this.orderInfon.channel?this.orderInfon.channel:"----" }}</div>
+                    <div class="txt">{{   this.orderInfon.channel?this.orderInfon.channel:"--" }}</div>
                 </div>
             </li>
             <li>
                 <div class="item">
                     <div class="tit">预计发货时间</div>
-                    <div class="txt">{{  this.orderInfon.estimatedDeliveryTime? this.orderInfon.estimatedDeliveryTime:"----" }}</div>
+                    <div class="txt">{{  this.orderInfon.estimatedDeliveryTime? this.orderInfon.estimatedDeliveryTime:"--" }}</div>
                 </div>
                 <div class="item">
                     <div class="tit">期望发货时间</div>
-                    <div class="txt">{{   this.orderInfon.expectedDeliveryTime?this.orderInfon.expectedDeliveryTime:"----"  }}</div>
+                    <div class="txt">{{   this.orderInfon.expectedDeliveryTime?this.orderInfon.expectedDeliveryTime:"--"  }}</div>
                 </div>
                 <div class="item">
                     <div class="tit">指定发货时间</div>
-                    <div class="txt">{{  this.orderInfon.specifyDeliveryTime?this.orderInfon.specifyDeliveryTime:"----" }}</div>
+                    <div class="txt">{{  this.orderInfon.specifyDeliveryTime?this.orderInfon.specifyDeliveryTime:"--" }}</div>
                
                
                 </div>
                 <div class="item">
                     <div class="tit">客户留言</div>
-                    <div class="txt">{{  this.orderInfon.remark?this.orderInfon.remark:"----" }}</div>
+                    <div class="txt">{{  this.orderInfon.remark?this.orderInfon.remark:"--" }}</div>
                 </div>
                 
 
 
                 <div class="item">
                     <div class="tit">是否需要质检</div>
-                    <div class="txt">{{  this.orderInfon.qualityInspectionRemark?this.orderInfon.qualityInspectionRemark:"----" }}</div>
+                    <div class="txt">{{  this.orderInfon.qualityInspectionRemark?this.orderInfon.qualityInspectionRemark:"--" }}</div>
                 </div>
                 <div class="item">
                     <div class="tit">工厂备注</div>
-                    <div class="txt">{{  this.orderInfon.mchRemark?this.orderInfon.mchRemark:"----"  }}</div>
+                    <div class="txt">{{  this.orderInfon.mchRemark?this.orderInfon.mchRemark:"--"  }}</div>
                 </div>
             </li>
             <li>
                 <div class="item">
                     <div class="tit">工厂送货至</div>
                     <div class="txt">
-                        <p>{{ this.orderInfon.warehouseDTO.warehouseName?this.orderInfon.warehouseDTO.warehouseName:"----" }}</p>
-                        <p>{{  this.orderInfon.warehouseDTO.name?this.orderInfon.warehouseDTO.name:"----" }}  {{ this.orderInfon.warehouseDTO.mobile?this.orderInfon.warehouseDTO.mobile:"----" }}</p>
-                        <p>{{this.orderInfon.warehouseDTO.provice?this.orderInfon.warehouseDTO.provice:"----"}} {{ this.orderInfon.warehouseDTO.city?this.orderInfon.warehouseDTO.city:"----" }} {{ this.orderInfon.warehouseDTO.area?this.orderInfon.warehouseDTO.area:"----" }} {{ this.orderInfon.warehouseDTO.address?this.orderInfon.warehouseDTO.address:"----" }}</p>
+                        <p>{{ this.orderInfon.warehouseDTO.warehouseName?this.orderInfon.warehouseDTO.warehouseName:"--" }}</p>
+                        <p>
+                            {{  this.orderInfon.warehouseDTO.name?this.orderInfon.warehouseDTO.name:"--" }}
+                            {{ this.orderInfon.warehouseDTO.mobile?this.orderInfon.warehouseDTO.mobile:"--" }}
+                        </p>
+                        
+                        <p>
+                            {{this.orderInfon.warehouseDTO.provice?this.orderInfon.warehouseDTO.provice:"--"}} 
+                            {{ this.orderInfon.warehouseDTO.city?this.orderInfon.warehouseDTO.city:"--" }}     
+                            {{ this.orderInfon.warehouseDTO.area?this.orderInfon.warehouseDTO.area:"--" }} 
+                            {{ this.orderInfon.warehouseDTO.address?this.orderInfon.warehouseDTO.address:"--" }}
+                        </p>
                     </div>
                 </div>
                 <div class="item">
                     <div class="tit">客户名</div>
-                    <div class="txt">{{  this.orderInfon.warehouseDTO.name?this.orderInfon.warehouseDTO.name:"----" }}</div>
+                    <div class="txt">{{  this.orderInfon.warehouseDTO.name?this.orderInfon.warehouseDTO.name:"--" }}</div>
                 </div>
             </li>
         </ul>
@@ -88,29 +97,29 @@
             </el-table-column>
             <el-table-column prop="subtitle" label="商品名称" width="200">
                 <template slot-scope="scope">
-                    <div>{{  scope.row.productName?scope.row.productName:"----" }}</div>
+                    <div>{{  scope.row.productName?scope.row.productName:"--" }}</div>
                 </template>
             </el-table-column>
             <el-table-column prop="address" label="型号/规格" width="200" >
                 <template slot-scope="scope">
-                    <div>{{  scope.row.attribute?scope.row.attribute:"----" }}</div>
+                    <div>{{  scope.row.attribute?scope.row.attribute:"--" }}</div>
                 </template>
             </el-table-column>
             <el-table-column prop="address" label="采购价(元)" width="150">
                 <template slot-scope="scope">
-                    <div>{{  scope.row.settlementPrice?scope.row.settlementPrice:"----" }}</div>
+                    <div>{{  scope.row.settlementPrice?scope.row.settlementPrice:"--" }}</div>
                 </template>
             </el-table-column>
             <el-table-column prop="address" label="采购数"  width="100">
                 <template slot-scope="scope">
-                    <div>{{  scope.row.num?scope.row.num:"----" }}</div>
+                    <div>{{  scope.row.num?scope.row.num:"--" }}</div>
                 </template>
             </el-table-column>
             <!-- <el-table-column prop="address" label="退货数"></el-table-column>
             <el-table-column prop="address" label="是否定制"  ></el-table-column> -->
             <el-table-column prop="address" label="状态"  width="200">
                 <template slot-scope="scope">
-                    <div>{{  scope.row.status?scope.row.status:"----" }}</div>
+                    <div>{{  scope.row.status?scope.row.status:"--" }}</div>
                 </template>
             </el-table-column>
             <!-- <el-table-column prop="address" label="售后状态"  ></el-table-column> -->
@@ -119,11 +128,9 @@
         </el-table>
         
         <div class="beihuo_btn_group">
-
             <!-- <el-button type="success" class="btn" v-if="confirmGoodStatus && multipleSelection.length == goodArr.length" @click="sendGoodsFn">安排发货</el-button>
             <el-button type="primary" class="btn" v-else @click="stockUpGoodFn">工厂备货完成</el-button>    
             <el-button class="btn" v-if="confirmGoodStatus" @click="cancelGoodFn">撤销工厂备货完成</el-button> -->
-           
             <el-button type="primary" class="btn" v-if="sendGoodStatus==1 || sendGoodStatus==1.5" @click="stockUpGoodFn">工厂备货完成</el-button>   
             <el-button type="success" class="btn" v-if="sendGoodStatus==2 && multipleSelection.length == goodArr.length" @click="sendGoodsFn">安排发货</el-button>
         
