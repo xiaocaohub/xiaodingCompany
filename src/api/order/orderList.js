@@ -44,6 +44,24 @@ export const sendGoods = params => {
 
 
 
+// 取消发货
+export const cancelSendGood = params => {
+  return request({
+    method: "post",
+    params
+  });
+};
+
+
+
+// 撤销备货完成
+export const cancelGood =  params => {
+  return request({
+      method: "post",
+      params
+  });
+};
+
 // 备货完成
 export const stockUpGood = params => {
   return request({

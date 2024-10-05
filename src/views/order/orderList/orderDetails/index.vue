@@ -11,8 +11,8 @@
                 </div>
                 <div class="item">
                     <div class="tit">订单状态</div>
-                    <div class="txt">{{  this.orderInfon.statusRemark?this.orderInfon.statusRemark:"--" }}</div>
-                </div>
+                    <div class="txt">{{  this.orderInfon.statusRemark?this.orderInfon.statusRemark:"--" }} </div>
+                </div> 
                 <div class="item">
                     <div class="tit">结算金额</div>
                     <div class="txt">{{ this.orderInfon.settlementAmount?this.orderInfon.settlementAmount:0 }} 元</div>
@@ -73,8 +73,10 @@
                     </div>
                 </div>
                 <div class="item">
+
+
                     <div class="tit">客户名</div>
-                    <div class="txt">{{  this.orderInfon.warehouseDTO.name?this.orderInfon.warehouseDTO.name:"--" }}</div>
+                    <div class="txt">{{  this.orderInfon.name?this.orderInfon.name:"--" }}</div>
                 </div>
             </li>
         </ul>
@@ -107,7 +109,7 @@
             </el-table-column>
             <el-table-column prop="address" label="采购价(元)" width="150">
                 <template slot-scope="scope">
-                    <div>{{  scope.row.settlementPrice?scope.row.settlementPrice:"--" }}</div>
+            <div>{{  scope.row.settlementPrice?scope.row.settlementPrice:"--" }}</div>
                 </template>
             </el-table-column>
             <el-table-column prop="address" label="采购数"  width="100">
@@ -119,7 +121,8 @@
             <el-table-column prop="address" label="是否定制"  ></el-table-column> -->
             <el-table-column prop="address" label="状态"  width="200">
                 <template slot-scope="scope">
-                    <div>{{  scope.row.status?scope.row.status:"--" }}</div>
+
+                    <div>{{  scope.row.status | goodStatusFn }}</div>
                 </template>
             </el-table-column>
             <!-- <el-table-column prop="address" label="售后状态"  ></el-table-column> -->
@@ -132,24 +135,22 @@
             <el-button type="primary" class="btn" v-else @click="stockUpGoodFn">工厂备货完成</el-button>    
             <el-button class="btn" v-if="confirmGoodStatus" @click="cancelGoodFn">撤销工厂备货完成</el-button> -->
             <el-button type="primary" class="btn" v-if="sendGoodStatus==1 || sendGoodStatus==1.5" @click="stockUpGoodFn">工厂备货完成</el-button>   
-            <el-button type="success" class="btn" v-if="sendGoodStatus==2 && multipleSelection.length == goodArr.length" @click="sendGoodsFn">安排发货</el-button>
-        
-
-
-            
+            <el-button type="success" class="btn" v-if="sendGoodStatus==2 && multipleSelection.length == goodArr.length" @click="sendGoodsFn">安排发货</el-button>            
             <el-button class="btn" v-if="sendGoodStatus==2 || sendGoodStatus==1.5" @click="cancelGoodFn">撤销工厂备货完成</el-button>
+
+
         </div>
 
         <div class="big_title">发货记录</div>
         
+
         <div class="send_good_title_con">
+        
             <div class="info">
                 <span>YS2408290000021-1</span>
-
                 <span>安排时间: 2024-08-27  13:52:15</span>
                 <span>发货时间: - -</span>
             </div>
-
 
             <div class="btn_con" >
                 <p class="title_msg" v-if="sendGoodStatus == 3">注：先打印标签，后打印发货单，确保标签与发货单件数一致！</p>
@@ -271,9 +272,8 @@
             </el-dialog>
     </div>
 </template>
-
 <script>
-import {  orderDetailsInfo, stockUpGood, sendGoods, confirmSendGood } from '@/api/order/orderList';
+import {  orderDetailsInfo, stockUpGood, sendGoods, confirmSendGood, cancelGood, cancelSendGood } from '@/api/order/orderList';
 import { setStorage, getStorage } from "@/utils/storage";
 export default {
     data () {
@@ -334,9 +334,10 @@ export default {
         init: function () {
             let orderNo = window.location.href.split("orderNo=")[1];   
             this.orderNo = orderNo;
-            
             this.getOrderInfoFn()
         },
+
+
         getOrderInfoFn: function () {
             let _this = this;
             orderDetailsInfo({
@@ -354,54 +355,59 @@ export default {
                     if (resData.status<3) {
                         _this.sendGoodStatus = "";
                     }
+
+                    if (resData.status == 4) {
+                        _this.sendGoodStatus = 3;
+                    }
+
                     if (resData.status == 5) {
                         _this.sendGoodStatus = resData.status;
                     }
                      
-                    console.log(" _this.goodArr")
-
-                    console.log( _this.goodArr)
-                    console.log(" _this.goodArr")
+              
+                    // console.log(" _this.goodArr")
+                    // console.log( _this.goodArr)
+                    // console.log(" _this.goodArr")
                 }
             })              
         },
         handleSelectionChange(val) {
-            console.log("val")
-            console.log(val)
-            console.log("val")
+            // console.log("val")
+            // console.log(val)
+            // console.log("val")
         
             this.multipleSelection = val;
         },
-        
+
         // 备货完成
         stockUpGoodFn: function () {
             let _this = this;
-
             let goodArr = this.goodArr;
-
             let detailNos = "";
-           
+     
             if (this.multipleSelection.length == 0) {
-           
+
                 this.$message.error('请选择商品');    
+
                 return ;
             }
             this.confirmGoodStatus = true;
-
             if (this.multipleSelection.length > 0 && this.multipleSelection.length<goodArr.length) { 
                 this.sendGoodStatus = 1.5;
             }
             if (this.multipleSelection.length == goodArr.length) { 
+
                 this.sendGoodStatus = 2;
             }
-            goodArr.forEach((item)=> {
+            this.multipleSelection.forEach((item)=> {
                 detailNos += item.detailNo + ",";
             })
+
             stockUpGood({
+
                 api: "mch.App.orderV2.ready",
                 orderNo: this.orderNo,
                 detailNos: detailNos
-
             }).then((res)=> {
                 if (res.data.code == 200) {
                     _this.$message({
@@ -418,22 +424,52 @@ export default {
                 }
             })
         },
+
         // 撤销工厂备货完成
         cancelGoodFn: function () {
+            let _this = this;
+
             this.sendGoodStatus = 1;
             this.confirmGoodStatus = false;
+    
+         
+            let goodArr = this.goodArr;
+            let detailNos = "";
+            this.multipleSelection.forEach((item)=> {
+                detailNos += item.detailNo + ",";
+            })
 
-            this.$refs.multipleTable.clearSelection()
+            cancelGood({
+                api: "mch.App.orderV2.ready",
+                orderNo: this.orderNo,
+                detailNos: detailNos
+            }).then((res)=> {
+                if (res.data.code == 200) {
+
+                    _this.$message({
+                        showClose: true,
+                        message: res.data.message,
+                        type: 'success'
+                    });
+                } else {
+                    _this.$message({
+                        showClose: true,
+
+                        message: res.data.message,
+                        type: 'error'
+                    });
+                }
+            })
         },
         // 安排发货
         sendGoodsFn: function () {
             let _this = this;
+
             _this.sendGoodStatus = 3;
             sendGoods({
                 api: "mch.App.orderV2.shipment",
                 orderNo: this.orderNo
             }).then((res)=> { 
-        
                 if (res.data.code == 200) {
                     _this.$message({
                         message: res.data.message,
@@ -449,8 +485,39 @@ export default {
             })          
         },
         // 取消安排
+      
         cancelSendGoodsFn: function () {
-            this.sendGoodStatus = 2;
+           // this.sendGoodStatus = 2;
+            let _this = this;
+            this.$confirm('确认取消吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    cancelSendGood({
+                        api: "mch.App.orderV2.shipmentCancel",
+                        orderNo: _this.orderNo
+
+                    }).then((res)=> {
+                        if (res.data.code == 200) {
+                            _this.$message({
+                                message: res.data.message,
+                                type: 'success'
+                            });
+                            _this.sendGoodStatus = 2;
+                        } else {   
+                            _this.$message({
+                            
+                                message: res.data.message,                
+                                type: 'error'
+                            });
+                        }
+                    })
+                }).catch(() => {
+                   
+            });
+
+           
         },
 
         // 确认发货
@@ -477,7 +544,33 @@ export default {
                     });
                 }
             })
-        }        
+        }
+
+    },
+    filters: {
+        goodStatusFn: function (status) {
+            switch (status) {
+                case 0: 
+                    return "待确认";
+                    break ;
+                case 1: 
+                    return "备货中";
+                    break ;
+
+                case 2: 
+                    return "待发货";
+                    break ;
+                
+
+                case 3: 
+                    return "已发货";
+                    break ;
+                case 1: 
+                    
+                    return "已退款";
+                    break ;
+            }
+        }
     }
 }
 </script>
