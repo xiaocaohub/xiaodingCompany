@@ -57,7 +57,8 @@
                         
                         <div class="btn" @click="confirmOrderFn(scope.row)" v-if="scope.row.status == 2">确认订单</div>
                         <router-link :to="'/order/orderList/orderDetails?orderNo=' +  scope.row.orderNoInfo.orderNo">订单详情 </router-link>
-                        <div class="btn">导出订单</div>
+                        
+                        <div class="btn" @click="exportOrderFn(scope.row)">导出订单</div>
                     </div>
                 </template>
             </el-table-column>
@@ -95,7 +96,7 @@
 </template>
 
 <script>
-import {  orderList, confirmOrder } from '@/api/order/orderList';
+import {  orderList, confirmOrder, exportOrder } from '@/api/order/orderList';
 import { data } from 'jquery';
 export default {
     data () {
@@ -264,6 +265,31 @@ export default {
                 }
                 
             })            
+        },
+        exportOrderFn: function (orderItem) {
+
+            let _this = this;
+            this.currentOrderItem = orderItem; 
+            exportOrder({
+                    api: "mch.App.orderV2.export",
+                    orderNo:  orderItem.orderNoInfo.orderNo,
+                
+                    exportType: 1
+            }).then((res)=> {
+                let blob = new Blob([res.data], {type: "application/actet-stream;charset=utf-8"})
+                if ('download' in document.createElement("a")) {
+                    const elink = document.createElement("a");
+                    elink.download = "商品销售表"  + ".xls"
+                    elink.style.display = "none";
+                    elink.href = URL.createObjectURL(blob)
+                    document.body.appendChild(elink)
+                    elink.click()
+                    URL.revokeObjectURL(elink.href)
+                    document.body.removeChild(elink)
+                } else {
+                    navigator.msSaveBlob(blob, "商品订单"  + ".xls")
+                }
+            })
         }
     },
     filters: {

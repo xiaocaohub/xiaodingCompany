@@ -79,6 +79,14 @@ export const confirmSendGood = params => {
   });
 };
 
+export const exportOrder =  params => {
+  return request({
+      method: "post",
+      params
+  });
+};
+
+
 // 编辑订单页面详情
 export const editOrderView = params => {
   return request({

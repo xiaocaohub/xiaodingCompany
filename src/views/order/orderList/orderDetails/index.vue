@@ -17,7 +17,7 @@
                     <div class="tit">结算金额</div>
                     <div class="txt">{{ this.orderInfon.settlementAmount?this.orderInfon.settlementAmount:0 }} 元</div>
                 </div>
-                <div class="item">
+              <div class="item">
                     <div class="tit">渠道</div>
 
                     <div class="txt">{{   this.orderInfon.channel?this.orderInfon.channel:"--" }}</div>
